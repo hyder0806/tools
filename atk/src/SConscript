@@ -1,0 +1,10 @@
+Import('env')
+
+sys_obj = env.Object(Glob("sys/*.c"))
+sys_obj += env.Object(Glob("usb/*.c"))
+sys_obj += env.Object(Glob("uart/*.c"))
+sys_obj += env.Object(Glob("atk/*.c"))
+sys_obj += env.Object(Glob("task/*.c"))
+sys_obj += env.Object(Glob("prctl/*.c"))
+
+Return("sys_obj")

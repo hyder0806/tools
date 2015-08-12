@@ -1,0 +1,8 @@
+#create a environment
+env = Environment()
+
+#configure gtk building enviroment
+env.ParseConfig("pkg-config --cflags --libs gtk+-2.0")
+
+#create a execute file
+env.Program("Build/app1/app.debug",'src/app1/app1.c')

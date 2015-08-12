@@ -1,0 +1,77 @@
+#!/bin/sh
+
+DEBUG=on #on or off
+APPLICATION=app.debug
+
+for_help() {
+	echo "Usage:"
+	echo "\t./debug [OPTION] "
+	echo "\t-b: build the target"
+	echo "\t-c: clean the target"
+	echo "\t-C: Workplace initialize"
+	echo "\tapp: running special app"
+#echo "		-l: build the lib"
+#echo "		-a:	test list detail"
+	echo "example:"
+	echo "\t./debug -b to build the project"
+	echo "\t./debug app [num] [-b|-c]-> run special app test code"
+	echo "\t\t\t[num] -> Application Num"
+	echo "\t\t\t[-b] -> Build Application [Num]"
+	echo "\t\t\t[-c] -> Clear Application [Num]"
+	echo "\t./debug -> run current test code"
+	exit 0
+}
+
+if [ -z $1 ]; then
+	if [ -f Build/app.debug ]; then
+		./Build/app.debug
+	else
+		for_help
+	fi
+fi
+
+clear_project()
+{
+	echo "Clear workplace..."
+		rm ./Build/${APPLICATION}
+	echo "\trm ./Build/app* -r"
+		rm ./Build/sys -r
+	echo "\trm ./Build/SConstruct"
+		rm ./Build/SConstruct
+	echo "\trm ./src/SConscript"
+		rm ./src/SConscript
+
+}
+
+running_app()
+{
+	echo "Build hfc system now..."
+	if [ "$1" != "-bq" ]; then
+		scons --file=./Build/SConstruct; 
+	else
+		scons -s --file=./Build/SConstruct; 
+
+	fi
+
+	if [ -f ./Build/sys/${APPLICATION} ]; then
+		cp ./Build/sys/${APPLICATION} ./Build/${APPLICATION}
+		echo "Running Application hfc system now..."
+		./Build/${APPLICATION}	
+	else
+		echo "Please rebuild the projoct at first!"
+	fi
+}
+
+
+if [ $# -ge 1 ]; then
+	case "$1" in
+	-b | -bq) running_app $@;;
+	-c) scons -c --file=./Build/SConstruct;;
+#	-l) scons --file=./Build/LibSConstruct;;
+#	-lc) scons -c --file=./Build/LibSConstruct;;
+#	-a) ./Build/app.debug -v;;
+	-C) clear_project;;
+	*) for_help;;
+	esac
+fi
+

@@ -1,0 +1,5 @@
+Import('env')
+
+src_obj = env.Object(Glob("app4/*.c"))
+
+Return("src_obj")

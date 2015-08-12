@@ -1,0 +1,25 @@
+#create a environment
+env = Environment()
+
+#env append libusb_flag
+env.Append(LIBPATH=['./libusb/lib/'])
+env.Append(CCFLAGS=['-I./libusb/include/'])
+env.Append(CCFLAGS=['-I./inc/'])
+env.Append(CCFLAGS=['-I./src/uart/'])
+env.Append(CCFLAGS=['-I./src/atk/'])
+env.Append(CCFLAGS=['-I./src/task/'])
+env.Append(CCFLAGS=['-I./src/sys/'])
+env.Append(CCFLAGS=['-I./src/prctl/'])
+
+#configure gtk building enviroment
+env.ParseConfig("pkg-config --cflags --libs gtk+-2.0")
+
+#export the environment config
+Export('env')
+
+#collect all of source file
+App_obj = SConscript(['src/SConscript'])
+
+#create a execute file
+env.Program("Build/sys/app.debug",list(App_obj))
+#,LIBS=['-lpthread'])
